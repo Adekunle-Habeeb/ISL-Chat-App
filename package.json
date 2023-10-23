@@ -4,7 +4,7 @@
   "description": "A Chat application built for International school Lagos(ISL)",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Adekunle Habeeb",
@@ -20,7 +20,6 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.0.0",
     "mongoose": "^6.10.0",
-    "nodemailer": "^6.9.5",
-    "socket.io": "^4.7.2"
+    "nodemailer": "^6.9.5"
   }
 }
