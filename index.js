@@ -9,7 +9,7 @@ const messageRoute = require("./Routes/messageRoutes");
 const app = express();
 const port = process.env.PORT || 3000;
 const http = require("http").createServer(app);
-const io = require("socket.io")(http);
+// const io = require("socket.io")(http);
 
 // Configure and connect to MongoDB
 mongoose.set("strictQuery", false)
