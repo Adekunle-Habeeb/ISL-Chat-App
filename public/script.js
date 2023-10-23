@@ -12,10 +12,12 @@ const groupMessages = [];
 // Store {user._id, user.name}
 
 document.addEventListener("DOMContentLoaded", function () {
-
   //CHAT USERS
   let url = '/user/fetchUsers'; // Replace with your API endpoint URL
 let authToken = localStorage.getItem('token'); // Replace with your authentication token
+if(!authToken){
+  window.location.href = "/";
+}
 
 // Create headers with the authentication token
 let headers = new Headers({
@@ -82,12 +84,12 @@ fetch(request)
       .then(data => {
         // individual Chat
         const username = document.querySelector('.greeting span').innerHTML;
-        console.log(data.individualChats)
         data.individualChats.forEach((chat)=>{
           const obj = {};
           obj.id = chat.users[1]._id;
           obj.chatId = chat._id;
           obj.name = chat.users[1].name;
+          obj.lastMessage = chat.latestMessage.content;
           if(obj.name === username){
             obj.name = chat.users[0].name;
             obj.id = chat.users[0]._id;
@@ -101,6 +103,7 @@ fetch(request)
           const obj = {};
           obj.chatId = chat._id;
           obj.chatName = chat.chatName;
+          obj.lastMessage = chat.latestMessage.content;
           obj.users = chat.users; //An array of users
           adminGroups.push(obj);
         });
@@ -180,7 +183,7 @@ document.querySelector('.remove-button').addEventListener('click', function(){
   return response.json(); // Parse the response as JSON
   })
   .then(data => {
-  console.log('Response data:', data);
+  //console.log('Response data:', data);
   // Handle the response data here
   })
   .catch(error => {
@@ -232,7 +235,7 @@ document.querySelector('.create-button').addEventListener('click', function(){
   return response.json(); // Parse the response as JSON
   })
   .then(data => {
-  console.log('Response data:', data);
+  //console.log('Response data:', data);
   // Handle the response data here
   })
   .catch(error => {
@@ -295,7 +298,11 @@ function display(){
     creategroup.style.display = "flex";
     chats.innerHTML = "";
     messageUsers.forEach((ob)=>{
-      chats.innerHTML += `<div id="${ob.chatId}" custom="${ob.id}" class="chat"><img src="profile.png" alt="" width="60px" height="60px"><h2>${ob.name}</h2></div>`;
+      let lastMessage = ob.lastMessage;
+      if(lastMessage.length > 17){
+        lastMessage = lastMessage.slice(0, 15) + "...";
+      }
+      chats.innerHTML += `<div id="${ob.chatId}" custom="${ob.id}" class="chat"><img src="profile.png" alt="" width="60px" height="60px"><h2>${ob.name}</h2><span>${ob.lastMessage}</span></div>`;
     });
   }else{
 
@@ -311,7 +318,11 @@ function groupDisplay(){
   if(true){
     chats.innerHTML = "";
     adminGroups.forEach((ob)=>{
-      chats.innerHTML += `<div id="${ob.chatId}" custom="${ob.chatId}" class="chat"><img src="profile.png" alt="" width="60px" height="60px"><h2>${ob.chatName}</h2></div>`;
+      const lastMessage = ob.lastMessage;
+      if(lastMessage.length > 16){
+        lastMessage = lastMessage.slice(0, 15) + "...";
+      }
+      chats.innerHTML += `<div id="${ob.chatId}" custom="${ob.chatId}" class="chat"><img src="profile.png" alt="" width="60px" height="60px"><h2>${ob.chatName}</h2><span>${ob.lastMessage}</span></div>`;
       });
   }
 }
@@ -352,7 +363,7 @@ function messageClick (){
       document.querySelector('footer input').focus()
       id = e.getAttribute('custom');
       let chatId = e.id
-      console.log(chatId)
+      //console.log(chatId)
       if(chatId){
         url = `/message/${chatId}`; // Replace with your API endpoint URL
     authToken = localStorage.getItem('token'); // Replace with your authentication token
@@ -380,7 +391,7 @@ function messageClick (){
       .then(data => {
         // individual Chat Message
         userMessages.length = 0;
-        console.log(data);
+        //console.log(data);
         data.forEach((chat)=>{
           const obj = {};
           obj.id = chat._id;
@@ -425,9 +436,9 @@ function showMessage(){
   section.scrollTop = section.scrollHeight;
   userMessages.forEach((message) => {
     if(message.sender === name){
-      section.innerHTML += `<div class="owner"><p>${message.content}</p></div>`
+      section.innerHTML += `<div class="owner"><span>You:</span><p>${message.content}</p></div>`
     }else{
-      section.innerHTML += `<div class="other"><p>${message.content}</p></div>`
+      section.innerHTML += `<div class="other"><span>${message.sender}:</span><p>${message.content}</p></div>`
     }
   })
     section = document.querySelector('section');
@@ -439,19 +450,25 @@ function showMessage(){
 document.querySelector('footer button').addEventListener('click', function(){
   let section = document.querySelector('section');
   const content = document.querySelector('footer input').value;
-  section.innerHTML += `<div class="owner"><p>${content}</p></div>`;
+  section.innerHTML += `<div class="owner"><span>You:</span><p>${content}</p></div>`;
   section.scrollTop = section.scrollHeight;
   document.querySelector('footer input').value = '';
 
   //Post Message
+  const checkChat = document.querySelectorAll('.section span')[0].innerHTML;
+  const checkRule = document.querySelectorAll('.section span')[0].classList.contains("border-bottom");
+if(checkChat.toLowerCase() === "messages" && checkRule){
+  url = '/message/individual'
+}else{
   url = '/message/'; // Replace with your actual API endpoint
+}
   authToken = localStorage.getItem('token');
 
   const data = {
   content: content,
   chatId: id
   };
-  console.log(id);
+  //console.log(id);
 
   // Create the request options
   const options = {
@@ -473,7 +490,7 @@ document.querySelector('footer button').addEventListener('click', function(){
   })
   .then(data => {
   // Handle the response data here
-  console.log(data);
+  //console.log(data);
   })
   .catch(error => {
   console.error('Error:', error);
@@ -508,7 +525,7 @@ searchInput.addEventListener('input', () => {
         fetch(request)
             .then(response => response.json())
             .then(data => {
-              console.log(data)
+              //console.log(data)
                 displayResults(data);
             })
             .catch(error => {
@@ -537,7 +554,7 @@ function displayResults(users) {
 function searchClick(){
   document.querySelectorAll('.search-name').forEach((e) => {
     e.addEventListener('click', function(){
-      console.log('Tested')
+      //console.log('Tested')
       document.querySelector('.chat-section').classList.add('message-on');
       document.querySelector('.details h2').innerHTML = e.innerHTML;
       document.querySelector('footer input').value = "";
@@ -605,3 +622,45 @@ function searchClick(){
   )
 }
  
+
+
+
+// Socket IO
+const userSocket = {
+  data: {
+    _id: localStorage.getItem('id'),
+  }
+}
+
+
+// Connect to the Socket.io server
+const socket = io("http://localhost:3000");
+
+// Event handler for when the connection is established
+socket.on("connect", () => {
+  //console.log("Connected to the Socket.io server");
+  
+  // Perform any setup that you need on connection
+  socket.emit("setup", userSocket);
+});
+
+// Event handler for joining a chat room
+socket.on("join chat", (room) => {
+  socket.join(room);
+  //console.log(`Joined chat room: ${room}`);
+});
+
+// Event handler for receiving a new message
+socket.on("message received", (newMessageReceived) => {
+  console.log("New message received:", newMessageReceived);
+});
+
+// You can also send messages to the server when needed
+function sendNewMessage(newMessageStatus) {
+  socket.emit("new message", newMessageStatus);
+}
+
+// Handle disconnection
+socket.on("disconnect", () => {
+  //console.log("Disconnected from the Socket.io server");
+});

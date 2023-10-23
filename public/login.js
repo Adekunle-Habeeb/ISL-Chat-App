@@ -26,6 +26,7 @@ if(loginForm){
         localStorage.setItem('token', data.token);
         localStorage.setItem('uname', data.name);
         localStorage.setItem('admin', data.isAdmin);
+        localStorage.setItem('id', data._id);
         window.location.href=`/chat.html`;
       }
     } catch (error) {
