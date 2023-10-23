@@ -64,3 +64,12 @@ p{
   font-family: 'poppins';
   cursor: pointer;
 }
+
+span{
+  font-family: 'poppins';
+  margin-top: 2%;
+  opacity: 0.5;
+  font-size: 14px;
+  display: block;
+  text-align: center;
+}

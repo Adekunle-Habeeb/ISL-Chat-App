@@ -1,5 +1,18 @@
 'use-strict';
 
+// Connect to the Socket.io server
+const socket = io("http://localhost:3000");
+
+// Event handler for when the connection is established
+socket.on("connect", () => {
+  //console.log("Connected to the Socket.io server");
+});
+
+// Handle disconnection
+socket.on("disconnect", () => {
+  //console.log("Disconnected from the Socket.io server");
+});
+
 
 //users and id.
 const adminUsers = [];
@@ -16,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let url = '/user/fetchUsers'; // Replace with your API endpoint URL
 let authToken = localStorage.getItem('token'); // Replace with your authentication token
 if(!authToken){
-  window.location.href = "/";
+  // window.location.href = "/";
 }
 
 // Create headers with the authentication token
@@ -354,6 +367,7 @@ document.querySelectorAll('.section span').forEach((e)=>
 
 // Message Clicked
 let id = "";
+let chatId = "";
 function messageClick (){
   document.querySelectorAll('.chat').forEach((e) => {
     e.addEventListener('click', function(){
@@ -362,7 +376,7 @@ function messageClick (){
       document.querySelector('footer input').value = "";
       document.querySelector('footer input').focus()
       id = e.getAttribute('custom');
-      let chatId = e.id
+      chatId = e.id
       //console.log(chatId)
       if(chatId){
         url = `/message/${chatId}`; // Replace with your API endpoint URL
@@ -417,11 +431,24 @@ function messageClick (){
   }else{
     document.querySelector('.icon-remove').style.display = "none";
   }
+
     })
   })
 }
 
 messageClick();
+
+//Socket to receive Real time chat.
+const userName = localStorage.getItem('uname')
+socket.on('message', (msg)=>{
+  if(msg.id === chatId){
+    if(msg.name !== userName){
+      let section = document.querySelector('section');
+      section.innerHTML += `<div class="other"><span>${msg.name}:</span><p>${msg.message}</p></div>`
+      section.scrollTop = section.scrollHeight;
+    }
+  }
+})
 
 
 {
@@ -496,6 +523,15 @@ if(checkChat.toLowerCase() === "messages" && checkRule){
   console.error('Error:', error);
   // Handle errors here
   });
+
+  const socketMessage = {
+    name: localStorage.getItem('uname'),
+    id : chatId,
+    message: content,
+  }
+
+  // socket IO
+  socket.emit("message", socketMessage);
 })
 
 
@@ -625,42 +661,3 @@ function searchClick(){
 
 
 
-// Socket IO
-const userSocket = {
-  data: {
-    _id: localStorage.getItem('id'),
-  }
-}
-
-
-// Connect to the Socket.io server
-const socket = io("http://localhost:3000");
-
-// Event handler for when the connection is established
-socket.on("connect", () => {
-  //console.log("Connected to the Socket.io server");
-  
-  // Perform any setup that you need on connection
-  socket.emit("setup", userSocket);
-});
-
-// Event handler for joining a chat room
-socket.on("join chat", (room) => {
-  socket.join(room);
-  //console.log(`Joined chat room: ${room}`);
-});
-
-// Event handler for receiving a new message
-socket.on("message received", (newMessageReceived) => {
-  console.log("New message received:", newMessageReceived);
-});
-
-// You can also send messages to the server when needed
-function sendNewMessage(newMessageStatus) {
-  socket.emit("new message", newMessageStatus);
-}
-
-// Handle disconnection
-socket.on("disconnect", () => {
-  //console.log("Disconnected from the Socket.io server");
-});

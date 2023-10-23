@@ -101,3 +101,12 @@ a{
   font-family: 'poppins', sans-serif;
   font-size: 22px;
 }
+
+span{
+  display: block;
+  font-family: 'poppins';
+  font-size: 14px;
+  opacity: 0.5;
+  text-align: center;
+  margin: 0 auto;
+}

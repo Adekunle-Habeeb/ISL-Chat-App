@@ -116,3 +116,11 @@ a{
   font-family: 'poppins', sans-serif;
   outline: none;
 }
+
+span{
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  font-family: 'poppins';
+  opacity: 0.5;
+}
