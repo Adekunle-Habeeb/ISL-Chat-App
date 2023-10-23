@@ -1,17 +1,7 @@
 'use-strict';
 
 // Connect to the Socket.io server
-const socket = io("http://localhost:3000");
 
-// Event handler for when the connection is established
-socket.on("connect", () => {
-  //console.log("Connected to the Socket.io server");
-});
-
-// Handle disconnection
-socket.on("disconnect", () => {
-  //console.log("Disconnected from the Socket.io server");
-});
 
 
 //users and id.
@@ -29,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let url = '/user/fetchUsers'; // Replace with your API endpoint URL
 let authToken = localStorage.getItem('token'); // Replace with your authentication token
 if(!authToken){
-  // window.location.href = "/";
+  window.location.href = "/";
 }
 
 // Create headers with the authentication token
@@ -439,16 +429,7 @@ function messageClick (){
 messageClick();
 
 //Socket to receive Real time chat.
-const userName = localStorage.getItem('uname')
-socket.on('message', (msg)=>{
-  if(msg.id === chatId){
-    if(msg.name !== userName){
-      let section = document.querySelector('section');
-      section.innerHTML += `<div class="other"><span>${msg.name}:</span><p>${msg.message}</p></div>`
-      section.scrollTop = section.scrollHeight;
-    }
-  }
-})
+
 
 
 {
@@ -524,14 +505,6 @@ if(checkChat.toLowerCase() === "messages" && checkRule){
   // Handle errors here
   });
 
-  const socketMessage = {
-    name: localStorage.getItem('uname'),
-    id : chatId,
-    message: content,
-  }
-
-  // socket IO
-  socket.emit("message", socketMessage);
 })
 
 

@@ -1,3 +1,4 @@
+
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
@@ -43,18 +44,18 @@ app.get("/admin", (req, res) => {
   res.sendFile(__dirname + "/public/admin.html");
 });
 
-// Socket.IO implementation
-io.on("connection", (socket) => {
-  console.log("Socket connected");
+// // Socket.IO implementation
+// io.on("connection", (socket) => {
+//   console.log("Socket connected");
 
-  socket.emit("user connected"); // Emit an event to the connected client
+//   socket.emit("user connected"); // Emit an event to the connected client
 
-  socket.on("message", (msg) => {
-    io.emit("message", msg); // Broadcast the message to all connected clients
-  });
-});
+//   socket.on("message", (msg) => {
+//     io.emit("message", msg); // Broadcast the message to all connected clients
+//   });
+// });
 
-http.listen(port, () => {
+app.listen(port, () => {
   console.log("Server is running on port", port);
 });
 
