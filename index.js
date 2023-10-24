@@ -12,14 +12,20 @@ const http = require("http").createServer(app);
 // const io = require("socket.io")(http);
 
 // Configure and connect to MongoDB
-mongoose.set("strictQuery", false)
-mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.set("strictQuery", false);
+
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 5000, // Adjust the timeout value as needed
+})
   .then(() => {
     console.log("MongoDB is connected");
   })
   .catch((err) => {
     console.error("MongoDB connection error:", err);
   });
+
 
 app.use(express.static("public"));
 app.use(cors({

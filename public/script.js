@@ -305,7 +305,7 @@ function display(){
       if(lastMessage.length > 17){
         lastMessage = lastMessage.slice(0, 15) + "...";
       }
-      chats.innerHTML += `<div id="${ob.chatId}" custom="${ob.id}" class="chat"><img src="profile.png" alt="" width="60px" height="60px"><h2>${ob.name}</h2><span>${ob.lastMessage}</span></div>`;
+      chats.innerHTML += `<div id="${ob.chatId}" custom="${ob.id}" class="chat"><img src="profile.PNG" alt="" width="60px" height="60px"><h2>${ob.name}</h2><span>${ob.lastMessage}</span></div>`;
     });
   }else{
 
@@ -325,7 +325,7 @@ function groupDisplay(){
       if(lastMessage.length > 16){
         lastMessage = lastMessage.slice(0, 15) + "...";
       }
-      chats.innerHTML += `<div id="${ob.chatId}" custom="${ob.chatId}" class="chat"><img src="profile.png" alt="" width="60px" height="60px"><h2>${ob.chatName}</h2><span>${ob.lastMessage}</span></div>`;
+      chats.innerHTML += `<div id="${ob.chatId}" custom="${ob.chatId}" class="chat"><img src="profile.PNG" alt="" width="60px" height="60px"><h2>${ob.chatName}</h2><span>${ob.lastMessage}</span></div>`;
       });
   }
 }
