@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
     },
     accessGranted: {
         type: Boolean,
-        default: false,
+        default: true,
     },
     passwordChangedAt: Date,
     passwordResetToken: String,

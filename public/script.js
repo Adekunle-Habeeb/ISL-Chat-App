@@ -106,7 +106,7 @@ fetch(request)
           const obj = {};
           obj.chatId = chat._id;
           obj.chatName = chat.chatName;
-          obj.lastMessage = chat.latestMessage.content;
+          obj.lastMessage = " ";
           obj.users = chat.users; //An array of users
           adminGroups.push(obj);
         });
